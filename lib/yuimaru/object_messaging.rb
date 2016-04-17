@@ -1,5 +1,5 @@
 module Yuimaru
-  module Sequence
+  module ObjectMessaging
     refine(String) do
       def <<(name)
         $_ = Message.new(nil, name, self)

@@ -1,5 +1,5 @@
-class TestSequence < Test::Unit::TestCase
-  using Yuimaru::Sequence
+class TestObjectMessaging < Test::Unit::TestCase
+  using Yuimaru::ObjectMessaging
 
   test 'String#<<' do
     message = 'hi' << 'name'

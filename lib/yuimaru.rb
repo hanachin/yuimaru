@@ -1,10 +1,10 @@
 require "yuimaru/version"
 require "yuimaru/message"
-require "yuimaru/sequence"
+require "yuimaru/object_messaging"
 
 module Yuimaru
   class << self
-    using Yuimaru::Sequence
+    using Yuimaru::ObjectMessaging
 
     def sequence(seq)
       add = -> (v) { current << v if v.is_a?(Yuimaru::Message) }
