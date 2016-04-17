@@ -7,10 +7,14 @@ module Yuimaru
     using Yuimaru::Sequence
 
     def sequence(seq)
+      add = current.method(:<<)
+      trace_var(:$_, add)
+
       eval(seq)
 
       current
     ensure
+      untrace_var(:$_, add)
       reset
     end
 
@@ -20,11 +24,11 @@ module Yuimaru
       current << []
     end
 
+    private
+
     def current
       Thread.current[:yuimaru] ||= []
     end
-
-    private
 
     def reset
       Thread.current[:yuimaru] = nil
