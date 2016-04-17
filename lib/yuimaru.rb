@@ -13,7 +13,7 @@ module Yuimaru
 
       eval(seq)
 
-      current
+      Sequence.new(current)
     ensure
       untrace_var(:$_, add)
       reset
