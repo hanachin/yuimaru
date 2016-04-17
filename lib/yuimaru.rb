@@ -3,5 +3,11 @@ require "yuimaru/message"
 require "yuimaru/sequence"
 
 module Yuimaru
-  # Your code goes here...
+  class << self
+    using Yuimaru::Sequence
+
+    def sequence(seq)
+      eval(seq)
+    end
+  end
 end
