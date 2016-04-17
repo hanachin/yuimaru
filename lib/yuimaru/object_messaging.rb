@@ -1,3 +1,5 @@
+require "yuimaru/message"
+
 module Yuimaru
   module ObjectMessaging
     refine(String) do
