@@ -7,7 +7,7 @@ module Yuimaru
     using Yuimaru::Sequence
 
     def sequence(seq)
-      add = current.method(:<<)
+      add = -> (v) { current << v if v.is_a?(Yuimaru::Message) }
       trace_var(:$_, add)
 
       eval(seq)
