@@ -1,6 +1,7 @@
 require "yuimaru/version"
 require "yuimaru/message"
 require "yuimaru/object_messaging"
+require "yuimaru/sequence"
 
 module Yuimaru
   class << self
