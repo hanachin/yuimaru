@@ -1,3 +1,5 @@
+require 'tmpdir'
+
 class TestYuimaru < Test::Unit::TestCase
   def test_sequence
     seq = Yuimaru.sequence(<<~SEQ)
@@ -8,6 +10,14 @@ class TestYuimaru < Test::Unit::TestCase
       "alice" >> "hi carol" >> "carol"
       "alice" << "hi alice" << "carol"
     SEQ
+
+    Dir.tmpdir do |dir|
+      path = File.join(dir, 'hi.png')
+      assert_path_not_exist(path)
+      seq.save(path)
+      assert_path_exist(path)
+    end
+
     assert_instance_of Yuimaru::Sequence, seq
     assert_equal seq.messages[0].from, "alice"
     assert_equal seq.messages[0].name, "hi bob"
