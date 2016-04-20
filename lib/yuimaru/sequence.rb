@@ -8,6 +8,10 @@ module Yuimaru
       @messages = messages
     end
 
+    def actors
+      messages.map {|m| [m.from, m.to] }.flatten.uniq
+    end
+
     def save(path)
       diagram = Diagram.new(self)
       diagram.draw do |surface|
