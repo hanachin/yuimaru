@@ -11,7 +11,7 @@ class TestYuimaru < Test::Unit::TestCase
       "alice" << "hi alice" << "carol"
     SEQ
 
-    Dir.tmpdir do |dir|
+    Dir.mktmpdir do |dir|
       path = File.join(dir, 'hi.png')
       assert_path_not_exist(path)
       seq.save(path)
