@@ -9,21 +9,54 @@ module Yuimaru
 
       def initialize(sequence)
         @sequence = sequence
-        @width = 300
-        @height = 200
       end
 
       def draw
+        set_layout
         init_surface
         init_context
         set_font
         fill_background
-        show_sample_text
+
+        draw_actors
 
         yield surface
       end
 
       private
+
+      def set_layout
+        s = Cairo::ImageSurface.new(Cairo::FORMAT_ARGB32, 300, 200)
+        c = Cairo::Context.new(s)
+
+        set_font(context: c)
+
+        te = -> (text) { c.text_extents(text) }
+
+        margin = 16
+        current_x = current_y = margin
+
+        actor_margin = 16
+        actor_padding = 8
+        @actors_pos = {}
+        @sequence.actors.each do |a|
+          a_te = te[a]
+          @actors_pos[a] = {
+            x: current_x + actor_margin,
+            y: current_y,
+            text_x: current_x + actor_margin + actor_padding,
+            text_y: current_y + actor_padding + a_te.height,
+            width: actor_padding * 2 + a_te.width,
+            height: actor_padding * 2 + a_te.height
+          }
+          current_x += actor_margin + actor_padding * 2 + a_te.width
+        end
+
+        current_y = @actors_pos.map {|(a, pos)| pos[:y] + pos[:height] }.max
+
+        @width = current_x + margin
+        @height = current_y + margin
+      end
 
       def init_surface
         format = Cairo::FORMAT_ARGB32
@@ -34,7 +67,7 @@ module Yuimaru
         @context = Cairo::Context.new(@surface)
       end
 
-      def set_font(family: HAND_FAMILY, font_size: 16)
+      def set_font(context: self.context, family: HAND_FAMILY, font_size: 16)
         context.font_face = Cairo::ToyFontFace.new(family)
         context.font_size = font_size
       end
@@ -46,22 +79,14 @@ module Yuimaru
         end
       end
 
-      def show_sample_text
-        text = 'sample'
-        te = context.text_extents(text)
-        text_x = width / 2 - te.width / 2
-        text_y = height / 2 - te.height / 2
-        context.move_to(text_x, text_y)
+      def draw_actors
         context.set_source_rgb(0, 0, 0)
-        context.show_text(text)
-
-        context.stroke do
-          margin = te.height
-          rectangle_x = width / 2 - te.width / 2 - margin
-          rectangle_y = height / 2 - te.height / 2 - margin
-          rectangle_width = te.width + margin * 2
-          rectangle_height = te.height + margin
-          context.rectangle(rectangle_x, rectangle_y, rectangle_width, rectangle_height)
+        @actors_pos.each do |a, pos|
+          context.move_to(pos[:text_x], pos[:text_y])
+          context.show_text(a)
+          context.stroke do
+            context.rectangle(pos[:x], pos[:y], pos[:width], pos[:height])
+          end
         end
       end
     end
