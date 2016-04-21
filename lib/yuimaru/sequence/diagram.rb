@@ -33,29 +33,41 @@ module Yuimaru
 
         te = -> (text) { c.text_extents(text) }
 
-        margin = 16
-        current_x = current_y = margin
+        @actors_layout = {}
 
-        actor_margin = 16
         actor_padding = 8
-        @actors_pos = {}
         @sequence.actors.each do |a|
           a_te = te[a]
-          @actors_pos[a] = {
-            x: current_x,
-            y: current_y,
-            text_x: current_x + actor_padding,
-            text_y: current_y + actor_padding + a_te.height,
+          @actors_layout[a] = {
+            text_width: a_te.width,
+            text_height: a_te.height,
             width: actor_padding * 2 + a_te.width,
             height: actor_padding * 2 + a_te.height
           }
-          current_x += actor_margin + actor_padding * 2 + a_te.width
         end
 
-        current_y = @actors_pos.map {|(a, pos)| pos[:y] + pos[:height] }.max
+        @sequence.messages.each do |m|
+          name_te = te[m.name]
+          @actors_layout[m.from][:max_distance][m.to] = [
+            @actors_layout[m.from][:max_distance][m.to],
+            name_te.width,
+            m.from / 2 + m.to / 2
+          ].compact.max
+        end
 
-        @width = current_x - actor_margin + margin
-        @height = current_y + margin
+        actor_margin = 16
+        current_x = current_y = actor_margin
+        @sequence.actors.each do |a|
+          l = @actors_layout[a]
+          l[:x] = current_x
+          l[:y] = current_y
+          l[:text_x] = current_x + actor_padding
+          l[:text_y] = current_y + actor_padding + l[:text_height]
+          current_x += l[:width] + actor_margin
+        end
+        current_y = @actors_layout.map {|(a, pos)| pos[:y] + pos[:height] }.max
+        @width = current_x
+        @height = current_y + actor_margin
       end
 
       def init_surface
@@ -81,7 +93,7 @@ module Yuimaru
 
       def draw_actors
         context.set_source_rgb(0, 0, 0)
-        @actors_pos.each do |a, pos|
+        @actors_layout.each do |a, pos|
           context.move_to(pos[:text_x], pos[:text_y])
           context.show_text(a)
           context.stroke do
