@@ -42,9 +42,9 @@ module Yuimaru
         @sequence.actors.each do |a|
           a_te = te[a]
           @actors_pos[a] = {
-            x: current_x + actor_margin,
+            x: current_x,
             y: current_y,
-            text_x: current_x + actor_margin + actor_padding,
+            text_x: current_x + actor_padding,
             text_y: current_y + actor_padding + a_te.height,
             width: actor_padding * 2 + a_te.width,
             height: actor_padding * 2 + a_te.height
@@ -54,7 +54,7 @@ module Yuimaru
 
         current_y = @actors_pos.map {|(a, pos)| pos[:y] + pos[:height] }.max
 
-        @width = current_x + margin
+        @width = current_x - actor_margin + margin
         @height = current_y + margin
       end
 
