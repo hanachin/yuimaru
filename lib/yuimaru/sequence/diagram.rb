@@ -46,24 +46,31 @@ module Yuimaru
           }
         end
 
+        actor_margin = 16
+
         @sequence.messages.each do |m|
           name_te = te[m.name]
+          @actors_layout[m.from][:max_distance] ||= {}
           @actors_layout[m.from][:max_distance][m.to] = [
             @actors_layout[m.from][:max_distance][m.to],
             name_te.width,
-            m.from / 2 + m.to / 2
+            @actors_layout[m.from][:width] / 2 + @actors_layout[m.to][:width] / 2,
+            actor_margin
           ].compact.max
         end
 
-        actor_margin = 16
         current_x = current_y = actor_margin
-        @sequence.actors.each do |a|
+        @sequence.actors.each_with_index do |a, i|
           l = @actors_layout[a]
           l[:x] = current_x
           l[:y] = current_y
           l[:text_x] = current_x + actor_padding
           l[:text_y] = current_y + actor_padding + l[:text_height]
-          current_x += l[:width] + actor_margin
+          if d = l[:max_distance][@sequence.actors[i + 1]]
+            current_x += l[:width] + actor_margin + d
+          else
+            current_x += l[:width] + actor_margin
+          end
         end
         current_y = @actors_layout.map {|(a, pos)| pos[:y] + pos[:height] }.max
         @width = current_x
