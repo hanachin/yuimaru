@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+require "optparse"
+require "yuimaru"
+
+opt = OptionParser.new
+opt.banner = "Usage: yuimaru file [options]"
+opt.on('-o output') {|v| @output = v }
+
+argv = opt.parse(ARGV)
+@output ||= File.basename(argv[0], '.*') + '.png'
+seq = Yuimaru.load_sequence(argv[0])
+seq.save(@output)
