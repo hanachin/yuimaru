@@ -19,6 +19,7 @@ module Yuimaru
         fill_background
 
         draw_actors
+        draw_messages
 
         yield surface
       end
@@ -46,14 +47,24 @@ module Yuimaru
           }
         end
 
-        actor_margin = 16
-
+        @messages_layout = {}
+        message_padding = 32
         @sequence.messages.each do |m|
           name_te = te[m.name]
+          @messages_layout[m] = {
+            text_width: name_te.width,
+            text_height: name_te.height,
+            width: message_padding * 2 + name_te.width,
+            height: message_padding * 2 + name_te.height
+          }
+        end
+
+        actor_margin = 16
+        @sequence.messages.each do |m|
           @actors_layout[m.from][:max_distance] ||= {}
           @actors_layout[m.from][:max_distance][m.to] = [
             @actors_layout[m.from][:max_distance][m.to],
-            name_te.width,
+            @messages_layout[m][:width],
             @actors_layout[m.from][:width] / 2 + @actors_layout[m.to][:width] / 2,
             actor_margin
           ].compact.max
@@ -73,6 +84,32 @@ module Yuimaru
           end
         end
         current_y = @actors_layout.map {|(a, pos)| pos[:y] + pos[:height] }.max
+
+        message_margin = 16
+        @sequence.messages.each do |m|
+          from_l = @actors_layout[m.from]
+          to_l = @actors_layout[m.to]
+          m_l = @messages_layout[m]
+
+          current_y += [from_l[:text_height], to_l[:text_height]].max
+          current_y += message_margin
+
+          m_l[:line_start] = {
+            x: from_l[:text_x] + from_l[:text_width] / 2,
+            y: current_y + m_l[:text_height]
+          }
+
+          m_l[:line_end] = {
+            x: to_l[:text_x] + to_l[:text_width] / 2,
+            y: current_y + m_l[:text_height]
+          }
+
+          m_l[:text_y] = current_y
+          m_l[:text_x] = m_l[:line_start][:x] + (m_l[:line_end][:x] - m_l[:line_start][:x]) / 2 - m_l[:text_width] / 2
+          current_y += m_l[:text_height]
+          current_y += message_margin
+        end
+
         @width = current_x
         @height = current_y + actor_margin
       end
@@ -105,6 +142,18 @@ module Yuimaru
           context.show_text(a)
           context.stroke do
             context.rectangle(pos[:x], pos[:y], pos[:width], pos[:height])
+          end
+        end
+      end
+
+      def draw_messages
+        context.set_source_rgb(0, 0, 0)
+        @messages_layout.each do |m, pos|
+          context.move_to(pos[:text_x], pos[:text_y])
+          context.show_text(m.name)
+          context.stroke do
+            context.move_to(pos[:line_start][:x], pos[:line_start][:y])
+            context.line_to(pos[:line_end][:x], pos[:line_end][:y])
           end
         end
       end
