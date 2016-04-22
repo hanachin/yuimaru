@@ -166,7 +166,7 @@ module Yuimaru
           context.stroke do
             context.set_source_rgb(0, 0, 0)
             context.move_to(pos[:line_start][:x], pos[:line_start][:y])
-            context.line_to(pos[:line_end][:x], pos[:line_end][:y])
+            context.line_to(pos[:line_end][:x], pos[:line_end][:y] + dashes * 2)
           end
         end
       end
