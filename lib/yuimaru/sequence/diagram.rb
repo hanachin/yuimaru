@@ -160,6 +160,8 @@ module Yuimaru
       end
 
       def draw_lifeline
+        dashes = 10
+        context.set_dash(dashes)
         @lifeline_layout.each do |_a, pos|
           context.stroke do
             context.set_source_rgb(0, 0, 0)
@@ -171,6 +173,7 @@ module Yuimaru
 
       def draw_messages
         context.set_source_rgb(0, 0, 0)
+        context.set_dash(nil)
         @messages_layout.each do |m, pos|
           context.move_to(pos[:text_x], pos[:text_y])
           context.show_text(m.name)
