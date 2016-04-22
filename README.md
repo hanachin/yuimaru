@@ -1,4 +1,5 @@
 # Yuimaru
+[![Build Status](https://travis-ci.org/hanachin/yuimaru.svg?branch=master)](https://travis-ci.org/hanachin/yuimaru)
 
 Generates sequence diagram.
 
