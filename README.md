@@ -1,5 +1,6 @@
 # Yuimaru
 [![Build Status](https://travis-ci.org/hanachin/yuimaru.svg?branch=master)](https://travis-ci.org/hanachin/yuimaru)
+[![Code Climate](https://codeclimate.com/github/hanachin/yuimaru/badges/gpa.svg)](https://codeclimate.com/github/hanachin/yuimaru)
 
 Generates sequence diagram.
 
