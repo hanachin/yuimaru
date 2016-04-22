@@ -2,7 +2,7 @@ require 'tmpdir'
 
 class TestYuimaru < Test::Unit::TestCase
   def test_sequence
-    seq = Yuimaru.sequence(<<~SEQ)
+    seq = Yuimaru.sequence(<<-SEQ)
       # assign $_ should be ignored
       $_ = :hi
       "alice" >> "hi bob" >> "bob"
