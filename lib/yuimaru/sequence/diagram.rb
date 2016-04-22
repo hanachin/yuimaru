@@ -202,13 +202,11 @@ module Yuimaru
             arrow_len = -10
           end
 
-          context.stroke do
+          context.fill do
             context.move_to(x, y)
             context.line_to(x + arrow_len, y - arrow_len)
-          end
-          context.stroke do
-            context.move_to(x, y)
             context.line_to(x + arrow_len, y + arrow_len)
+            context.move_to(x, y)
           end
         end
       end
