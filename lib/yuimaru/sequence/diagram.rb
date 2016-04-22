@@ -172,37 +172,43 @@ module Yuimaru
       end
 
       def draw_messages
+        arrow_margin = 5
         context.set_source_rgb(0, 0, 0)
         context.set_dash(nil)
         @messages_layout.each do |m, pos|
           context.move_to(pos[:text_x], pos[:text_y])
           context.show_text(m.name)
-          context.stroke do
-            context.move_to(pos[:line_start][:x], pos[:line_start][:y])
-            context.line_to(pos[:line_end][:x], pos[:line_end][:y])
+          if pos[:line_end][:x] > pos[:line_start][:x]
+            s, e, dir = pos[:line_start], pos[:line_end], 0
+          else
+            e, s, dir = pos[:line_start], pos[:line_end], 1
           end
 
-          x = pos[:line_end][:x]
-          y = pos[:line_end][:y]
-          arrow_len = 10
-          if pos[:line_end][:x] > pos[:line_start][:x]
-            context.stroke do
-              context.move_to(x, y)
-              context.line_to(x - arrow_len, y - arrow_len)
-            end
-            context.stroke do
-              context.move_to(x, y)
-              context.line_to(x - arrow_len, y + arrow_len)
-            end
+          context.stroke do
+            context.move_to(s[:x] + arrow_margin, s[:y])
+            context.line_to(e[:x] - arrow_margin, e[:y])
+          end
+
+          if dir.zero?
+            x = s[:x] + arrow_margin
           else
-            context.stroke do
-              context.move_to(x, y)
-              context.line_to(x + arrow_len, y - arrow_len)
-            end
-            context.stroke do
-              context.move_to(x, y)
-              context.line_to(x + arrow_len, y + arrow_len)
-            end
+            x = e[:x] - arrow_margin
+          end
+
+          y = e[:y]
+          if dir.zero?
+            arrow_len = 10
+          else
+            arrow_len = -10
+          end
+
+          context.stroke do
+            context.move_to(x, y)
+            context.line_to(x + arrow_len, y - arrow_len)
+          end
+          context.stroke do
+            context.move_to(x, y)
+            context.line_to(x + arrow_len, y + arrow_len)
           end
         end
       end
