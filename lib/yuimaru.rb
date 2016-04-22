@@ -19,6 +19,11 @@ module Yuimaru
       reset
     end
 
+    def load_sequence(path, env: default_env)
+      seq = File.read(path)
+      sequence(seq)
+    end
+
     def method_missing(name, *)
       return super if /\A_+\z/ !~ name
 
