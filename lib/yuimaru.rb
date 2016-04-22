@@ -1,11 +1,11 @@
 require "yuimaru/version"
 require "yuimaru/message"
-require "yuimaru/object_messaging"
+require "yuimaru/dsl/default"
 require "yuimaru/sequence"
 
 module Yuimaru
   class << self
-    using Yuimaru::ObjectMessaging
+    using Yuimaru::Dsl::Default
 
     def sequence(seq)
       add = -> (v) { current << v if v.is_a?(Yuimaru::Message) }

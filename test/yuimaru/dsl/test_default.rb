@@ -1,5 +1,5 @@
-class TestObjectMessaging < Test::Unit::TestCase
-  using Yuimaru::ObjectMessaging
+class TestDslDefault < Test::Unit::TestCase
+  using Yuimaru::Dsl::Default
 
   test 'String#<<' do
     message = 'hi' << 'name'
