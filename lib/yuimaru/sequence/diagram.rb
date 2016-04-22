@@ -190,16 +190,16 @@ module Yuimaru
           end
 
           if dir.zero?
-            x = s[:x] + arrow_margin
-          else
             x = e[:x] - arrow_margin
+          else
+            x = s[:x] + arrow_margin
           end
 
           y = e[:y]
           if dir.zero?
-            arrow_len = 10
-          else
             arrow_len = -10
+          else
+            arrow_len = 10
           end
 
           context.fill do
