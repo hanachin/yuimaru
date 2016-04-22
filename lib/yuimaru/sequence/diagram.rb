@@ -19,6 +19,7 @@ module Yuimaru
         fill_background
 
         draw_actors
+        draw_lifeline
         draw_messages
 
         yield surface
@@ -110,6 +111,18 @@ module Yuimaru
           current_y += message_margin
         end
 
+        @lifeline_layout = {}
+        end_y = @sequence.messages.map {|m| @messages_layout[m][:line_end][:y] }.max
+        @sequence.actors.each do |a|
+          a_l = @actors_layout[a]
+          x = a_l[:text_x] + a_l[:text_width] / 2
+          start_y = a_l[:y] + a_l[:height]
+          @lifeline_layout[a] = {
+            line_start: {x: x, y: start_y},
+            line_end:   {x: x, y: end_y}
+          }
+        end
+
         @width = current_x
         @height = current_y + actor_margin
       end
@@ -142,6 +155,16 @@ module Yuimaru
           context.show_text(a)
           context.stroke do
             context.rectangle(pos[:x], pos[:y], pos[:width], pos[:height])
+          end
+        end
+      end
+
+      def draw_lifeline
+        @lifeline_layout.each do |_a, pos|
+          context.stroke do
+            context.set_source_rgb(0, 0, 0)
+            context.move_to(pos[:line_start][:x], pos[:line_start][:y])
+            context.line_to(pos[:line_end][:x], pos[:line_end][:y])
           end
         end
       end
