@@ -36,8 +36,5 @@ module Yuimaru
     end
   end
 
-  Yuimaru.default_env = module DefaultEnv
-    using Yuimaru::Dsl::Default
-    binding
-  end
+  Yuimaru.default_env =Yuimaru::Dsl::Default.env
 end
