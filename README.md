@@ -1,6 +1,6 @@
 # Yuimaru
 
-TODO: Describe this gem
+Generates sequence diagram.
 
 ## Installation
 
@@ -20,7 +20,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```rb
+# sample.rb
+"alice" >> "hi bob" >> "bob"
+"alice" << "hi alice" << "bob"
+"alice" >> "hi carol" >> "carol"
+"alice" << "hi alice" << "carol"
+```
+
+```console
+$ bin/yuimaru sample.rb
+```
+
+![sample.png](sample.png)
 
 ## Development
 
