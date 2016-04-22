@@ -178,6 +178,29 @@ module Yuimaru
             context.move_to(pos[:line_start][:x], pos[:line_start][:y])
             context.line_to(pos[:line_end][:x], pos[:line_end][:y])
           end
+
+          x = pos[:line_end][:x]
+          y = pos[:line_end][:y]
+          arrow_len = 10
+          if pos[:line_end][:x] > pos[:line_start][:x]
+            context.stroke do
+              context.move_to(x, y)
+              context.line_to(x - arrow_len, y - arrow_len)
+            end
+            context.stroke do
+              context.move_to(x, y)
+              context.line_to(x - arrow_len, y + arrow_len)
+            end
+          else
+            context.stroke do
+              context.move_to(x, y)
+              context.line_to(x + arrow_len, y - arrow_len)
+            end
+            context.stroke do
+              context.move_to(x, y)
+              context.line_to(x + arrow_len, y + arrow_len)
+            end
+          end
         end
       end
     end
