@@ -5,13 +5,13 @@ require "yuimaru/sequence"
 
 module Yuimaru
   class << self
-    using Yuimaru::Dsl::Default
+    attr_accessor :default_env
 
-    def sequence(seq)
+    def sequence(seq, env: default_env)
       add = -> (v) { current << v if v.is_a?(Yuimaru::Message) }
       trace_var(:$_, add)
 
-      eval(seq)
+      eval(seq, env)
 
       Sequence.new(current)
     ensure
@@ -34,5 +34,10 @@ module Yuimaru
     def reset
       Thread.current[:yuimaru] = nil
     end
+  end
+
+  Yuimaru.default_env = module DefaultEnv
+    using Yuimaru::Dsl::Default
+    binding
   end
 end
